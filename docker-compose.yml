@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    container_name: multi-service-app
+    ports:
+      - "8080:8080" # Expose only the web service port
+    networks:
+      - app-network
+    depends_on:
+      - db
+      - cache
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/mydatabase
+      SPRING_REDIS_HOST: cache
+
+  db:
+    image: mysql:8.0
+    container_name: mysql-db
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+    ports:
+      - "3306:3306" # Only needed for development; remove for production
+    networks:
+      - app-network
+    volumes:
+      - db_data:/var/lib/mysql # Persistent volume for database data
+
+  cache:
+    image: redis:latest
+    container_name: redis-cache
+    ports:
+      - "6379:6379" # Only needed for development; remove for production
+    networks:
+      - app-network
+    volumes:
+      - redis_data:/data # Optional for Redis persistence
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  db_data:
+    driver: local
+  redis_data:
+    driver: local

@@ -1,0 +1,4 @@
+
+# Dockerfile for Redis Service
+FROM redis:latest
+EXPOSE 6379
