@@ -3,41 +3,43 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
-      - main  # Trigger pipeline on changes to the main branch
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    
+
     steps:
-    # Step 1: Checkout the code
-    - name: Checkout code
-      uses: actions/checkout@v2
-    
-    # Step 2: Set up Docker
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v1
-    
-    # Step 3: Log in to Docker Hub
-    - name: Log in to Docker Hub
-      uses: docker/login-action@v2
-      with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
+      # Step 1: Checkout the code from the repository
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    # Step 4: Build the Docker images
-    - name: Build Docker images
-      run: |
-        docker build -t your-docker-username/multi-service-app:latest .
-        docker build -t your-docker-username/mysql-db:latest -f Dockerfile.db .
-        docker build -t your-docker-username/redis-cache:latest -f Dockerfile.redis .
-    
-    # Step 5: Push the Docker images to Docker Hub
-    - name: Push Docker images
-      run: |
-        docker push your-docker-username/multi-service-app:latest
-        docker push your-docker-username/mysql-db:latest
-        docker push your-docker-username/redis-cache:latest
+      # Step 2: Set up Docker Buildx
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
 
-    # Step 6: Deploy to server (optional, depending on your setup)
-    # Add deployment steps here (e.g., SSH to a server and pull the Docker images)
+      # Step 3: Log in to Docker Hub
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      # Step 4: Build Docker images for each service
+      - name: Build Docker images
+        run: |
+          # Build web service image
+          docker build -t your-docker-username/multi-service-app:latest .
+          
+          # Build MySQL database service image
+          docker build -t your-docker-username/mysql-db:latest -f Dockerfile-db .
+
+          # Build Redis cache service image
+          docker build -t your-docker-username/redis-cache:latest -f Dockerfile-cache .
+
+      # Step 5: Push the Docker images to Docker Hub
+      - name: Push Docker images
+        run: |
+          docker push your-docker-username/multi-service-app:latest
+          docker push your-docker-username/mysql-db:latest
+          docker push your-docker-username/redis-cache:latest
