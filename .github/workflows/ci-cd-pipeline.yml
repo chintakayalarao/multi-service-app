@@ -29,17 +29,17 @@ jobs:
       - name: Build Docker images
         run: |
           # Build web service image
-          docker build -t your-docker-username/multi-service-app:latest .
+          docker build -t chintakayalarao/multi-service-app:latest .
           
           # Build MySQL database service image
-          docker build -t your-docker-username/mysql-db:latest -f Dockerfile-db .
+          docker build -t chintakayalarao/mysql-db:latest -f Dockerfile-db .
 
           # Build Redis cache service image
-          docker build -t your-docker-username/redis-cache:latest -f Dockerfile-cache .
+          docker build -t chintakayalarao/redis-cache:latest -f Dockerfile-cache .
 
       # Step 5: Push the Docker images to Docker Hub
       - name: Push Docker images
         run: |
-          docker push your-docker-username/multi-service-app:latest
-          docker push your-docker-username/mysql-db:latest
-          docker push your-docker-username/redis-cache:latest
+          docker push chintakayalarao/multi-service-app:latest
+          docker push chintakayalarao/mysql-db:latest
+          docker push chintakayalarao/redis-cache:latest
