@@ -5,7 +5,7 @@ services:
     build: .
     container_name: multi-service-app
     ports:
-      - "8080:8080" # Expose only the web service port
+      - "8080:8080" 
     networks:
       - app-network
     depends_on:
@@ -22,7 +22,7 @@ services:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
     ports:
-      - "3306:3306" # Only needed for development; remove for production
+      - "3306:3306" 
     networks:
       - app-network
     volumes:
@@ -32,7 +32,7 @@ services:
     image: redis:latest
     container_name: redis-cache
     ports:
-      - "6379:6379" # Only needed for development; remove for production
+      - "6379:6379" 
     networks:
       - app-network
     volumes:
